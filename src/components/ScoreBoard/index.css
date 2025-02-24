@@ -1,0 +1,232 @@
+/* General Styles */
+.scoreboard-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s ease;
+    animation: fade-in-out 0.2s ease-in-out;
+}
+
+.scoreboard-container.light {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.scoreboard-container.dark {
+    background-color: #1a1a1a;
+    color: #f4f4f4;
+}
+
+.review-main-container {
+    height: 90vh;
+    width: 100vw;
+    margin-top: 10vh;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px); /* Add blur effect */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+}
+
+.scoreboard-container.light .review-main-container {
+    background-color: rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scoreboard-container.dark .review-main-container {
+    background-color: rgba(45, 45, 45, 0.8); 
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+.empty-scoreboard-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+.scoreboard-heading {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    margin-bottom: 20px;
+    transition: color 0.2s ease;
+}
+.scoreboard-para{
+    text-align: center;
+    font-family: Roboto;
+    font-size: 20px;
+    margin: 0px;
+}
+
+.scoreboard-container.light .scoreboard-heading {
+    color: #2344c5;
+}
+
+.scoreboard-container.dark .scoreboard-heading {
+    color: #f4f4f4;
+}
+
+/* Table Styles */
+.scoreboard-table {
+    width: 77vw;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #f4f4f4; /* Semi-transparent white background for table */
+    border-radius: 5px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensure rounded corners are visible */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.853); /* Subtle shadow for depth */
+}
+
+.scoreboard-container.dark .scoreboard-table {
+    background-color: rgba(45, 45, 45, 0.9); /* Semi-transparent dark background for table */
+    box-shadow: 0 0 5px rgba(224, 171, 171, 0.881);
+}
+
+.scoreboard-table th,
+.scoreboard-table td {
+    padding: 15px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.scoreboard-table th {
+    background-color: #23357b;
+    color: white;
+    font-weight: bold;
+}
+
+/* Remove borders/lines from table */
+.scoreboard-table td {
+    border: none; /* Remove borders */
+}
+
+/* Add subtle hover effect to table rows */
+.scoreboard-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.scoreboard-container.dark .scoreboard-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Button Styles */
+.review-button,
+.back-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+.review-button:hover,
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+.back-button {
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
+/* Delete Button */
+.delete-button {
+    color: #da3333;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.delete-button:hover {
+    color: #ff0000;
+}
+
+.review-del {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Responsive Adjustments for Smaller Devices */
+@media (max-width: 992px) {
+    .review-main-container {
+        width: 95vw;
+        padding: 10px;
+    }
+
+    .scoreboard-heading {
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+
+    .scoreboard-table {
+        width: 90vw;
+    }
+
+    .scoreboard-table th,
+    .scoreboard-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .review-button,
+    .back-button {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .back-button {
+        padding: 8px 16px;
+        margin-top: 15px;
+    }
+
+    .delete-button {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 576px) {
+    .review-main-container {
+        width: 98vw;
+        padding: 8px;
+    }
+
+    .scoreboard-heading {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .scoreboard-table {
+        width: 90vw;
+    }
+
+    .scoreboard-table th,
+    .scoreboard-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .review-button,
+    .back-button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .back-button {
+        padding: 6px 12px;
+        margin-top: 10px;
+    }
+
+    .delete-button {
+        font-size: 16px;
+    }
+
+    .review-del {
+        gap: 5px;
+    }
+}

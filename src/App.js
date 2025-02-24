@@ -1,25 +1,73 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
 import './App.css';
+import Registration from '../src/components/Registration';
+import Home from './components/Home';
+import Quiz from './components/Quiz';
+import ScoreBoard from './components/ScoreBoard';
+import Review from './components/Review';
+import NotFound from './components/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
+import QuizContext from './context/quizContext';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const [language, setPageLanguage] = useState("english");
+    const [mode, setMode] = useState("Light");
+    const [categoryType, setCategoryType] = useState("");
+    const [level, setLevel] = useState("");
+    const [category, setCategory] = useState('');
+    const { categories, levels } = useContext(QuizContext);
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [scoreBoard, setScoreBoard] = useState([]);
+
+    useEffect(() => {
+        document.title = "Quiz Game";
+    }, []);
+
+    const changeLanguage = newLang => setPageLanguage(newLang);
+
+    const changeMode = () => { setMode(mode === 'Light' ? 'Dark' : 'Light') };
+
+    const selectCategoryType = categoryType => { setCategoryType(categoryType) };
+
+    const selectCategory = category => { setCategory(category) };
+
+    const selectLevel = level => { setLevel(level) };
+
+    const addSelectedAnswers = (answer) => setSelectedAnswers([...selectedAnswers, answer]);
+
+    const clearSelectedAnswer = () => setSelectedAnswers([]);
+
+    const addScoreBoardContext = (scoreBoardData) => {
+        setScoreBoard(prevScores => {
+            const mergedScores = [...prevScores, ...scoreBoardData];
+            const uniqueScores = Array.from(new Map(mergedScores.map(item => [item.id, item])).values());
+            return uniqueScores;
+        });
+    };
+    
+
+    const updateScoreBoard = id => setScoreBoard(prevScores => prevScores.filter(item => item.id !== id));
+
+    return (
+        <BrowserRouter>
+            <QuizContext.Provider value={{
+                language, mode, changeLanguage, changeMode, categories, levels,
+                selectCategoryType, selectCategory, selectLevel, categoryType, category, level,
+                scoreBoard, addScoreBoardContext, updateScoreBoard, addSelectedAnswers, selectedAnswers, clearSelectedAnswer
+            }}>
+                <Routes>
+                    <Route path="/authenticate" element={<Registration />} />
+                    <Route path="/" element={<ProtectedRoute element={<Home />} />} />
+                    <Route path="/quiz" element={<ProtectedRoute element={<Quiz />} />} />
+                    <Route path="/scoreboard" element={<ProtectedRoute element={<ScoreBoard />} />} />
+                    <Route path='/review/:id' element={<ProtectedRoute element={<Review />} />} />
+                    <Route path="/not-found" element={<NotFound />} />
+                    <Route path="*" element={<Navigate to="/not-found" />} />
+                </Routes>
+            </QuizContext.Provider>
+        </BrowserRouter>
+    );
 }
 
 export default App;
