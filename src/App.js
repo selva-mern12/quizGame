@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+
 import './App.css';
 import Registration from '../src/components/Registration';
 import Home from './components/Home';
@@ -65,6 +67,7 @@ const App = () => {
                     <Route path="/not-found" element={<NotFound />} />
                     <Route path="*" element={<Navigate to="/not-found" />} />
                 </Routes>
+                <Analytics />
             </QuizContext.Provider>
         </BrowserRouter>
     );

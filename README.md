@@ -1,13 +1,6 @@
 Welcome to my 🧠 Quiz Game (front end)
 
-A **React-based** frontend application for a quiz game that supports **Tamil & English**, multiple categories, and difficulty levels. 
-
-🔗 Backend Integration
-This repository contains only the frontend of the Quiz Game.
-If you wish to explore the backend, check out:
-
-➡️ quizBackend => https://github.com/selva-mern12/quiz-backend
-
+A **React-based** frontend application for a quiz game that supports **Tamil & English**, multiple categories, and difficulty levels.  
 
  📌 Features
 
@@ -97,3 +90,4 @@ npm start
 
 📜 License
 This project is open-source and available under the MIT License.
+
