@@ -40,23 +40,12 @@ const App = () => {
 
     const clearSelectedAnswer = () => setSelectedAnswers([]);
 
-    const addScoreBoardContext = (scoreBoardData) => {
-        setScoreBoard(prevScores => {
-            const mergedScores = [...prevScores, ...scoreBoardData];
-            const uniqueScores = Array.from(new Map(mergedScores.map(item => [item.id, item])).values());
-            return uniqueScores;
-        });
-    };
-    
-
-    const updateScoreBoard = id => setScoreBoard(prevScores => prevScores.filter(item => item.id !== id));
-
     return (
         <BrowserRouter>
             <QuizContext.Provider value={{
                 language, mode, changeLanguage, changeMode, categories, levels,
                 selectCategoryType, selectCategory, selectLevel, categoryType, category, level,
-                scoreBoard, addScoreBoardContext, updateScoreBoard, addSelectedAnswers, selectedAnswers, clearSelectedAnswer
+                addSelectedAnswers, selectedAnswers, clearSelectedAnswer
             }}>
                 <Routes>
                     <Route path="/authenticate" element={<Registration />} />

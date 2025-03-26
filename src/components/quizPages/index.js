@@ -36,35 +36,38 @@ export const EmptyQuiz = () =>{
     </div>
 )}
 
-export const SuccessQuiz = ({questions, selectedQuestion, selectAnswer, submitAnswer, nextQuestion, errorMsg}) =>{ 
+export const SuccessQuiz = ({questions, selectedQuestionIndex, selectedAnswer, selectAnswer, submitAnswer, nextQuestion, errorMsg}) =>{ 
     const {mode} = useContext(QuizContext)
+    const selectedQuestion = questions[selectedQuestionIndex]
+    
     return(
     <div className={`home-bg-container ${mode==='Light'? 'home-bg-light':'home-bg-dark'}`}>
         <h2 className='quiz-heading'>Quiz the Answer</h2>
         <div className={`quiz-container ${mode==='Light' ? 'quiz-container-light': 'quiz-container-dark'}`}>
-            {questions.map((question, index) => (
-                question.id === selectedQuestion.id && (
-                <div key={question.id} className='question-container'>
-                    <h3 className='question'>{question.question}</h3>
-                    <ul className='options'>
-                        {question?.options?.map((option, index) => (
-                            <li key={index} className='option'>
-                                <input type="radio" id={option} name={question.id} value={option}
-                                onChange={() => selectAnswer(question.id,option)}
+            <div key={selectedQuestion._id} className='question-container'>
+                <h3 className='question'>{selectedQuestion.question}</h3>
+                <ul className='options'>
+                    {selectedQuestion?.options?.map((option, index) => (
+                        <li key={index} className='option'>
+                            <input 
+                                type="radio" 
+                                id={option} 
+                                name={selectedQuestion._id} 
+                                value={option}
+                                checked={selectedAnswer?.id === selectedQuestion._id && selectedAnswer.option === option}
+                                onChange={() => selectAnswer(selectedQuestion._id,option)}
                                 className='option-input' />
-                                <label htmlFor={option} className='option-label'>{option}</label>
-                            </li>
-                        ))}
-                    </ul>
-                    {questions.length - 1 === index ? 
-                    (<button type='button' className='submit-button' 
-                    onClick={submitAnswer}>Submit</button>) : 
-                    (<button type='button' className='submit-button'
-                    onClick={nextQuestion}>Next</button>)}
-                    <p className='error-msg'>{errorMsg ? errorMsg : ' '}</p>
-                </div>
-                )
-            ))}
+                            <label htmlFor={option} className='option-label'>{option}</label>
+                        </li>
+                    ))}
+                </ul>
+                {questions.length - 1 === selectedQuestionIndex ? 
+                (<button type='button' className='submit-button' 
+                onClick={submitAnswer}>Submit</button>) : 
+                (<button type='button' className='submit-button'
+                onClick={nextQuestion}>Next</button>)}
+                <p className='error-msg'>{errorMsg ? errorMsg : ' '}</p>
+            </div>
         </div>
     </div>
 )

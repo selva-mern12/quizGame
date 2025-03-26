@@ -32,8 +32,6 @@ const Home = () => {
         navigate('/quiz')
     }
 
-    console.log({language})
-
     return (
         <div className='home-main-container'>
             <Header home/>

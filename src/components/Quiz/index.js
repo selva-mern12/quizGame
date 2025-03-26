@@ -17,10 +17,11 @@ const pageStatus = {
 const Quiz = () => {
     const { level, category, language, addSelectedAnswers, selectedAnswers, clearSelectedAnswer,
      } = useContext(quizContext);
+     console.log(selectedAnswers)
 
     const [questions, setQuestions] = useState([]);
     const [selectedAnswer, setSelectedAnswer] = useState({});
-    const [selectedQuestion, setSelectedQuestion] = useState({});
+    const [selectedQuestionIndex, setselectedQuestionIndex] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
     const [score, setScore] = useState(0);
     const [quizPageStatus, setQuizPageStatus] = useState(pageStatus.initial);
@@ -45,7 +46,7 @@ const Quiz = () => {
                     return setQuizPageStatus(pageStatus.empty);
                 }
                 setQuestions(questionData);
-                setSelectedQuestion(questionData[0] || {});
+                // setselectedQuestionIndex(questionData[0] || {});
                 setQuizPageStatus(pageStatus.success);
             } else {
                 setQuizPageStatus(pageStatus.failure);
@@ -57,12 +58,12 @@ const Quiz = () => {
 
     const nextQuestion = () => {
         if (Object.keys(selectedAnswer).length !== 0) {
-            if (selectedAnswer.option === selectedQuestion.answer) {
+            if (selectedAnswer.option === questions[selectedQuestionIndex]?.answer) {
                 setScore(prevScore => prevScore + 1);
             }
             addSelectedAnswers(selectedAnswer);
-            setSelectedQuestion(questions[questions.indexOf(selectedQuestion) + 1]);
-            setSelectedAnswer({});
+            setSelectedAnswer({})
+            setselectedQuestionIndex(prevIndex => prevIndex + 1);
             setErrorMsg('');
         } else {
             setErrorMsg('Please select an option to proceed');
@@ -70,9 +71,9 @@ const Quiz = () => {
     };
 
     const submitAnswer = () => {
-        if (Object.keys(selectedAnswers).length !== 0) {
+        if (Object.keys(selectedAnswer).length !== 0) {
             setQuizPageStatus(pageStatus.loading);
-            if (selectedAnswer.option === selectedQuestion.answer) {
+            if (selectedAnswer.option === questions[selectedQuestionIndex]?.answer) {
                 setScore(prevScore => {
                     const newScore = prevScore + 1;
                     return newScore;
@@ -93,7 +94,7 @@ const Quiz = () => {
     const addScoreBoard = async () => {
         try {
             const totalScore = selectedAnswers.reduce((acc, answer) => {
-                const question = questions.find(q => q.id === answer.id);
+                const question = questions.find(q => q._id === answer.id);
                 return question && answer.option.trim().toLowerCase() === question.answer.trim().toLowerCase()
                     ? acc + 1
                     : acc;
@@ -108,13 +109,12 @@ const Quiz = () => {
                     userId,
                     category,
                     level,
-                    totalScore, // Use calculated total score
-                    dateTime: new Date(),
+                    totalScore,
                     questionSet: questions.map((question) => ({
-                        id: question.id,
+                        id: question._id,
                         question: question.question,
                         answer: question.answer,
-                        selectedAnswer: selectedAnswers.find(answer => answer.id === question.id)?.option || null,
+                        selectedAnswer: selectedAnswers.find(answer => answer.id === question._id)?.option || null,
                     }))
                 }),
             };
@@ -152,8 +152,9 @@ const Quiz = () => {
                 return (
                     <SuccessQuiz
                         questions={questions}
-                        selectedQuestion={selectedQuestion}
+                        selectedQuestionIndex={selectedQuestionIndex}
                         selectAnswer={selectAnswer}
+                        selectedAnswer={selectedAnswer}
                         submitAnswer={submitAnswer}
                         nextQuestion={nextQuestion}
                         errorMsg={errorMsg}

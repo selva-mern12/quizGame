@@ -17,9 +17,9 @@ const pageStatus = {
 };
 
 const Scoreboard = () => {
-    const { mode, addScoreBoardContext, updateScoreBoard, scoreBoard } = useContext(QuizContext);
+    const { mode } = useContext(QuizContext);
     const [scoreBoardStatus, setScoreBoardStatus] = useState(pageStatus.initial)
-
+    const [scoreBoard, setScoreBoard] = useState([]);
     const cookies = new Cookies();
     const jwtToken = cookies.get('jwt_token');
     const userId = cookies.get('user_id');
@@ -32,13 +32,11 @@ const Scoreboard = () => {
                 method: 'GET', headers: {'Content-Type': 'application/json', Authorization: `Bearer ${jwtToken}`}
                 });
                 if (scoreBoardResponse.ok) {
-                    const scoreBoardData = await scoreBoardResponse.json();
-                    addScoreBoardContext(scoreBoardData);
-                    scoreBoardData.length === 0 ? 
-                        setScoreBoardStatus(pageStatus.empty) : 
-                        setScoreBoardStatus(pageStatus.success);
+                    const data = await scoreBoardResponse.json();
+                    setScoreBoard(data);
+                    setScoreBoardStatus(data.length === 0 ? pageStatus.empty : pageStatus.success);
                 } else {
-                    addScoreBoardContext([]);
+                    setScoreBoard([]);
                     setScoreBoardStatus(pageStatus.failure);
                 }
             }catch(error){
@@ -50,15 +48,31 @@ const Scoreboard = () => {
     }, []);
 
     const deleteScoreFromScoreBoard = async (id) => {
-        const deleteResponse = await fetch(`https://quiz-backend-kytv.onrender.com/quiz/scoreboard?id=${id}`, {
-            method: 'DELETE',headers: {'Content-Type': 'application/json', Authorization: `Bearer ${jwtToken}`}
-        });
-        if (deleteResponse.ok) {
-            updateScoreBoard(id);
+        try {
+            setScoreBoardStatus(pageStatus.loading);
+    
+            const deleteResponse = await fetch(`https://quiz-backend-kytv.onrender.com/quiz/scoreboard?id=${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${jwtToken}` }
+            });
+    
+            if (deleteResponse.ok) {
+                const deleteData = await deleteResponse.json();
+                console.log(deleteData);
+                setScoreBoard(prevScores => {
+                    const updatedScores = prevScores.filter(item => item._id !== id);
+                    setScoreBoardStatus(updatedScores.length === 0 ? pageStatus.empty : pageStatus.success);
+                    return updatedScores;
+                });
+            }
+        } catch (error) {
+            console.log(error.message);
+            setScoreBoardStatus(pageStatus.failure);
         }
     };
+    
 
-    scoreBoard.sort((a, b) => new Date(b.id) - new Date(a.id));
+    scoreBoard.sort((a, b) => new Date(b.date_time) - new Date(a.date_time));
 
     const renderScoreBoard = () => {
         switch (scoreBoardStatus){
@@ -91,18 +105,18 @@ const Scoreboard = () => {
                                 </thead>
                                 <tbody>
                                     {scoreBoard.map((entry) => (
-                                        <tr key={entry.id}>
+                                        <tr key={entry._id}>
                                             <td>{entry.category}</td>
                                             <td>{entry.level}</td>
                                             <td>{entry.total_score}</td>
                                             <td>{formatDistanceToNow(new Date(entry.date_time), { addSuffix: true })}</td>
                                             <td className="review-del">
-                                                <Link to={`/review/${entry.id}`}>
+                                                <Link to={`/review/${entry._id}`}>
                                                     <button className="review-button">Review</button>
                                                 </Link>
                                                 <MdDelete
                                                     className="delete-button"
-                                                    onClick={() => deleteScoreFromScoreBoard(entry.id)}
+                                                    onClick={() => deleteScoreFromScoreBoard(entry._id)}
                                                 />
                                             </td>
                                         </tr>
