@@ -26,7 +26,6 @@ A **React-based** frontend application for a quiz game that supports **Tamil & E
 | **React Cookies**  | Manage User Sessions |
 | **React Icons**    | UI Icons             |
 | **React Spinners** | Loading Indicators   |
-| **ReactJS Popup**  | Modals & Popups      |
 | **CSS Modules**    | Styling              |
 
 
